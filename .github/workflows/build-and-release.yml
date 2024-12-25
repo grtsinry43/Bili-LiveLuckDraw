@@ -10,11 +10,11 @@ on:
 
 jobs:
   build:
-    runs-on: ${{matrix.os}}
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ windows-latest, ubuntu-latest, macos-latest ]
-        node-version: [ 20.x ]
+        os: [windows-latest, ubuntu-latest, macos-latest]
+        node-version: [20.x]
 
     steps:
       - name: Checkout code
@@ -23,7 +23,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: ${{matrix.node-version}}
+          node-version: ${{ matrix.node-version }}
 
       - name: Install dependencies
         run: npm install
@@ -31,45 +31,35 @@ jobs:
       - name: Build the project
         run: npm run build
 
-      - name: Package the Electron app
-        run: |
-          if [${{ matrix.os}} == 'windows-latest' ]; then
-            npm run electron-builder --win
-          elif [${{ matrix.os}} == 'ubuntu-latest' ]; then
-            npm run electron-builder --linux
-          elif [${{ matrix.os}} == 'macos-latest' ]; then
-            npm run electron-builder --mac
-          fi
-
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          GITHUB_TOKEN: ${{ secrets.DEPLOY_TOKEN }}
         with:
-          tag_name: ${{github.ref}}
-          release_name: Release ${{github.ref}}
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
           draft: false
           prerelease: false
 
       - name: Upload Release Asset
         uses: actions/upload-release-asset@v1
         env:
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          GITHUB_TOKEN: ${{ secrets.DEPLOY_TOKEN }}
         with:
-          upload_url: ${{steps.create_release.outputs.upload_url}}
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: |
-            if [${{ matrix.os}} == 'windows-latest' ]; then
-              release/${{github.ref}}/Bili-LiveLuckDraw-Windows-${{github.ref}}-Setup.exe
-            elif [${{ matrix.os}} == 'ubuntu-latest' ]; then
-              release/${{github.ref}}/Bili-LiveLuckDraw-Linux-${{github.ref}}.AppImage
-            elif [${{ matrix.os}} == 'macos-latest' ]; then
-              release/${{github.ref}}/Bili-LiveLuckDraw-Mac-${{github.ref}}-Installer.dmg
+            if [ "${{ matrix.os }}" == "windows-latest" ]; then
+              release/${{ github.ref }}/Bili-LiveLuckDraw-Windows-${{ github.ref }}-Setup.exe
+            elif [ "${{ matrix.os }}" == "ubuntu-latest" ]; then
+              release/${{ github.ref }}/Bili-LiveLuckDraw-Linux-${{ github.ref }}.AppImage
+            elif [ "${{ matrix.os }}" == "macos-latest" ]; then
+              release/${{ github.ref }}/Bili-LiveLuckDraw-Mac-${{ github.ref }}-Installer.dmg
           asset_name: |
-            if [${{ matrix.os}} == 'windows-latest' ]; then
-              Bili-LiveLuckDraw-Windows-${{github.ref}}-Setup.exe
-            elif [${{ matrix.os}} == 'ubuntu-latest' ]; then
-              Bili-LiveLuckDraw-Linux-${{github.ref}}.AppImage
-            elif [${{ matrix.os}} == 'macos-latest' ]; then
-              Bili-LiveLuckDraw-Mac-${{github.ref}}-Installer.dmg
+            if [ "${{ matrix.os }}" == "windows-latest" ]; then
+              Bili-LiveLuckDraw-Windows-${{ github.ref }}-Setup.exe
+            elif [ "${{ matrix.os }}" == "ubuntu-latest" ]; then
+              Bili-LiveLuckDraw-Linux-${{ github.ref }}.AppImage
+            elif [ "${{ matrix.os }}" == "macos-latest" ]; then
+              Bili-LiveLuckDraw-Mac-${{ github.ref }}-Installer.dmg
           asset_content_type: application/zip
