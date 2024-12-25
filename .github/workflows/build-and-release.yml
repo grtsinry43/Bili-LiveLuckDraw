@@ -54,16 +54,16 @@ jobs:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: |
             if [ "${{ matrix.os }}" == "windows-latest" ]; then
-              release/${{ github.ref }}/Bili-LiveLuckDraw-Windows-${{ github.ref }}-Setup.exe
+              release/${{ github.ref_name }}/Bili-LiveLuckDraw-Windows-${{ github.ref_name }}-Setup.exe
             elif [ "${{ matrix.os }}" == "ubuntu-latest" ]; then
-              release/${{ github.ref }}/Bili-LiveLuckDraw-Linux-${{ github.ref }}.AppImage
+              release/${{ github.ref_name }}/Bili-LiveLuckDraw-Linux-${{ github.ref }}.AppImage
             elif [ "${{ matrix.os }}" == "macos-latest" ]; then
-              release/${{ github.ref }}/Bili-LiveLuckDraw-Mac-${{ github.ref }}-Installer.dmg
+              release/${{ github.ref_name }}/Bili-LiveLuckDraw-Mac-${{ github.ref_name }}-Installer.dmg
           asset_name: |
             if [ "${{ matrix.os }}" == "windows-latest" ]; then
-              Bili-LiveLuckDraw-Windows-${{ github.ref }}-Setup.exe
+              Bili-LiveLuckDraw-Windows-${{ github.ref_name }}-Setup.exe
             elif [ "${{ matrix.os }}" == "ubuntu-latest" ]; then
-              Bili-LiveLuckDraw-Linux-${{ github.ref }}.AppImage
+              Bili-LiveLuckDraw-Linux-${{ github.ref_name }}.AppImage
             elif [ "${{ matrix.os }}" == "macos-latest" ]; then
-              Bili-LiveLuckDraw-Mac-${{ github.ref }}-Installer.dmg
+              Bili-LiveLuckDraw-Mac-${{ github.ref_name }}-Installer.dmg
           asset_content_type: application/zip
