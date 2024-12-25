@@ -2,22 +2,15 @@ name: Build and Release
 
 on:
   push:
-#    branches:
-#      - main
     tags:
       - 'v*.*.*'
-#  pull_request:
-##    branches:
-##      - main
-#    tags:
-#      - 'v*.*.*'
 
 jobs:
   build:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [windows-latest, ubuntu-latest, macos-latest]
+        os: [windows-latest, ubuntu-latest]
         node-version: [20.x]
 
     steps:
@@ -35,35 +28,56 @@ jobs:
       - name: Build the project
         run: npm run build
 
+  create_release:
+    runs-on: ubuntu-latest
+    needs: build
+    outputs:
+      upload_url: ${{ steps.create_release.outputs.upload_url }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.ref_name }}  # 使用 github.ref_name 来获取标签名
+          tag_name: ${{ github.ref_name }}
           release_name: Release ${{ github.ref_name }}
           draft: false
           prerelease: false
 
-      - name: Upload Release Asset
+  upload_windows:
+    runs-on: windows-latest
+    needs: create_release
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Upload Windows Release Asset
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: |
-            if [ "${{ matrix.os }}" == "windows-latest" ]; then
-              release/${{ github.ref_name }}/Bili-LiveLuckDraw-Windows-${{ github.ref_name }}-Setup.exe
-            elif [ "${{ matrix.os }}" == "ubuntu-latest" ]; then
-              release/${{ github.ref_name }}/Bili-LiveLuckDraw-Linux-${{ github.ref }}.AppImage
-            elif [ "${{ matrix.os }}" == "macos-latest" ]; then
-              release/${{ github.ref_name }}/Bili-LiveLuckDraw-Mac-${{ github.ref_name }}-Installer.dmg
-          asset_name: |
-            if [ "${{ matrix.os }}" == "windows-latest" ]; then
-              Bili-LiveLuckDraw-Windows-${{ github.ref_name }}-Setup.exe
-            elif [ "${{ matrix.os }}" == "ubuntu-latest" ]; then
-              Bili-LiveLuckDraw-Linux-${{ github.ref_name }}.AppImage
-            elif [ "${{ matrix.os }}" == "macos-latest" ]; then
-              Bili-LiveLuckDraw-Mac-${{ github.ref_name }}-Installer.dmg
+          upload_url: ${{ needs.create_release.outputs.upload_url }}
+          asset_path: release/${{ github.ref_name }}/Bili-LiveLuckDraw-Windows-${{ github.ref_name }}-Setup.exe
+          asset_name: Bili-LiveLuckDraw-Windows-${{ github.ref_name }}-Setup.exe
+          asset_content_type: application/zip
+
+  upload_linux:
+    runs-on: ubuntu-latest
+    needs: create_release
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Upload Linux Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create_release.outputs.upload_url }}
+          asset_path: release/${{ github.ref_name }}/Bili-LiveLuckDraw-Linux-${{ github.ref_name }}.AppImage
+          asset_name: Bili-LiveLuckDraw-Linux-${{ github.ref_name }}.AppImage
           asset_content_type: application/zip

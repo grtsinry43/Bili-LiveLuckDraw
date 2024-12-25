@@ -5,7 +5,7 @@
   "asar": true,
   "productName": "Bili-LiveLuckDraw",
   "directories": {
-    "output": "release/${version}"
+    "output": "release/v${version}"
   },
   "files": [
     "dist",
@@ -15,7 +15,7 @@
     "target": [
       "dmg"
     ],
-    "artifactName": "${productName}-Mac-${version}-Installer.${ext}"
+    "artifactName": "${productName}-Mac-v${version}-Installer.${ext}"
   },
   "win": {
     "target": [
@@ -26,7 +26,7 @@
         ]
       }
     ],
-    "artifactName": "${productName}-Windows-${version}-Setup.${ext}"
+    "artifactName": "${productName}-Windows-v${version}-Setup.${ext}"
   },
   "nsis": {
     "oneClick": false,
@@ -39,7 +39,7 @@
       "AppImage",
       "deb"
     ],
-    "artifactName": "${productName}-Linux-${version}.${ext}",
+    "artifactName": "${productName}-Linux-v${version}.${ext}",
     "icon": "public/icon.png"
   }
 }
