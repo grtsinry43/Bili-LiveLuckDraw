@@ -1,30 +1,38 @@
-# React + TypeScript + Vite
+# Bili-LiveLuckDraw
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+[![GitHub license](https://img.shields.io/github/license/grtsinry43/grtblog)](http://www.apache.org/licenses/LICENSE-2.0.html)
+[![GitHub release](https://img.shields.io/github/v/release/grtsinry43/grtblog)](https://github.com/grtsinry43/grtblog/releases)
+[![Last commit](https://img.shields.io/github/last-commit/grtsinry43/grtblog)](https://github.com/grtsinry43/grtblog/commits/main)
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+一个 B 站直播抽奖工具，通过获取弹幕关键词进行抽奖，使用 Electron + React + Vite 构建
 
-## Expanding the ESLint configuration
+## 使用方法
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+在 Releases 中下载最新版本的安装包，安装并运行即可。
 
-- Configure the top-level `parserOptions` property like this:
+使用时在右上角登录 B 站账号，然后输入直播间号，点击开始获取即可。当结束获取后，点击开始抽奖即可。
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
+## 屏幕截图
+
+
+## 开发
+
+```bash
+pnpm install
+````
+    
+```bash
+pnpm run dev
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+## 打包
+
+```bash
+pnpm run build
+```
+
+## License
+
+MIT License
