@@ -1,3 +1,5 @@
+<img src="/public/icon.png" alt="logo" width="200"/>
+
 # Bili-LiveLuckDraw
 
 [![GitHub license](https://img.shields.io/github/license/grtsinry43/grtblog)](http://www.apache.org/licenses/LICENSE-2.0.html)
@@ -16,6 +18,7 @@
 
 ## 屏幕截图
 
+![截图效果](https://github.com/user-attachments/assets/ad5d7713-c495-4fc7-9260-58a6959e216a)
 
 ## 开发
 
