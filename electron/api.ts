@@ -130,7 +130,7 @@ danmuExtractor.on('MsgData', (content) => {
 });
 
 // 关键词匹配
-const participants: string[] = [];
+const participants: number[] = [];
 let keyword = '';
 
 function checkForKeywords(content: string, userName: string, uid: number) {
@@ -138,9 +138,9 @@ function checkForKeywords(content: string, userName: string, uid: number) {
         return;
     }
 
-    if (content.includes(keyword)) {
-        if (!participants.includes(userName)) {
-            participants.push(userName);
+    if (content === keyword) {
+        if (!participants.includes(uid)) {
+            participants.push(uid);
             sendMsgToRenderer('add_user', {
                 name: userName,
                 uid: uid,

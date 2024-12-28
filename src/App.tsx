@@ -15,6 +15,7 @@ import {useToast} from "@/hooks/use-toast"
 import {Toaster} from "@/components/ui/toaster.tsx";
 import {ScrollArea} from "@/components/ui/scroll-area.tsx";
 import {Badge} from "@/components/ui/badge.tsx";
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select.tsx";
 
 interface DanMuItem {
     name: string;
@@ -35,6 +36,11 @@ function App() {
 
     const realtimeListRef = useRef<HTMLDivElement>(null);
     const realtimeUserListRef = useRef<HTMLDivElement>(null);
+
+    const [isDrawing, setIsDrawing] = useState<boolean>(false);
+
+    const [luckyUserList, setLuckyUserList] = useState<Participant[]>([]);
+    const [drawCount, setDrawCount] = useState<number>(0);
 
     const startHandle = () => {
         if (!isLogin) {
@@ -207,26 +213,29 @@ function App() {
                 </div>
                 {/*<Input value={roomId} onChange={(e) => setRoomId(e.target.value)}/>*/}
                 <div className="main-container flex">
-                    <div className="real-time-list flex-1">
-                        <div className="mb-4"> 实时弹幕列表</div>
-                        <ScrollArea className={"h-[60vh] rounded border p-4"}>
-                            <div ref={realtimeListRef}>
-                                {
-                                    msgList.map((item, index) => {
-                                        return (
-                                            <div key={index} className="msg-item text-sm text-start p-1">
-                                                <span className="name font-bold"> {item.name} </span>
-                                                <Badge variant={'secondary'}
-                                                       className={"text-[0.75em] p-1 h-3"}> {item.uid} </Badge>
-                                                :&nbsp;
-                                                <span className="content"> {item.content} </span>
-                                            </div>
-                                        )
-                                    })
-                                }
-                            </div>
-                        </ScrollArea>
-                    </div>
+                    {
+                        !isDrawing &&
+                        <div className="real-time-list flex-1">
+                            <div className="mb-4"> 实时弹幕列表</div>
+                            <ScrollArea className={"h-[60vh] rounded border p-4"}>
+                                <div ref={realtimeListRef}>
+                                    {
+                                        msgList.map((item, index) => {
+                                            return (
+                                                <div key={index} className="msg-item text-sm text-start p-1">
+                                                    <span className="name font-bold"> {item.name} </span>
+                                                    <Badge variant={'secondary'}
+                                                           className={"text-[0.75em] p-1 h-3"}> {item.uid} </Badge>
+                                                    :&nbsp;
+                                                    <span className="content"> {item.content} </span>
+                                                </div>
+                                            )
+                                        })
+                                    }
+                                </div>
+                            </ScrollArea>
+                        </div>
+                    }
                     <div className="real-time-list flex-1">
                         <div className="mb-4"> 已成功参与列表</div>
                         <ScrollArea className={"h-[60vh] rounded border p-4"}>
@@ -245,6 +254,72 @@ function App() {
                             </div>
                         </ScrollArea>
                     </div>
+                    {
+                        isDrawing &&
+                        <div className="real-time-list flex-1">
+                            <div className="mb-4"> 抽奖结果</div>
+                            <div className="flex justify-center p-4">
+                                <Select onValueChange={(value) => {
+                                    console.log("选择抽取人数", value);
+                                    setDrawCount(parseInt(value));
+                                }
+                                }>
+                                    <SelectTrigger className="w-[180px]">
+                                        <SelectValue placeholder="选择抽取人数"></SelectValue>
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {
+                                            participants.map((_, index) => (
+                                                <SelectItem key={index} value={index + 1 + ""}>
+                                                    {index + 1}
+                                                </SelectItem>
+                                            ))
+                                        }
+                                    </SelectContent>
+                                </Select>
+                                <Button className={"ml-4"} disabled={drawCount == 0} onClick={() => {
+                                    for (let i = 0; i < drawCount; i++) {
+                                        const lucky = participants[Math.floor(Math.random() * participants.length)];
+                                        setLuckyUserList((prev) => {
+                                            return [...prev, lucky];
+                                        });
+                                        setParticipants((prev) => {
+                                            return prev.filter((item) => item.uid !== lucky.uid);
+                                        });
+                                    }
+                                }}> 抽取 </Button>
+                                <Button variant={'ghost'} onClick={() => {
+                                    setLuckyUserList([]);
+                                }}> 清空 </Button>
+                                <Button variant={'ghost'} onClick={() => {
+                                    navigator.clipboard.writeText(luckyUserList.map(
+                                        (item) => `${item.name}(${item.uid})`
+                                    ).join('\n'
+                                    )).then(() => {
+                                        toast({
+                                            title: '复制成功',
+                                            description: ` 已将中奖用户信息复制到剪贴板中 `,
+                                        })
+                                    })
+                                }}> 复制中奖信息 </Button>
+                            </div>
+                            <ScrollArea className={"h-[48.5vh] rounded border p-4"}>
+                                <div>
+                                    {
+                                        luckyUserList.map((item, index) => {
+                                            return (
+                                                <div key={index} className="msg-item text-sm text-start p-1">
+                                                    <span className="name font-bold"> {item.name} </span>
+                                                    <Badge variant={'secondary'}
+                                                           className={"text-[0.75em] p-1 h-3"}> {item.uid} </Badge>
+                                                </div>
+                                            )
+                                        })
+                                    }
+                                </div>
+                            </ScrollArea>
+                        </div>
+                    }
                 </div>
             </div>
 
@@ -265,28 +340,16 @@ function App() {
                     </Button>
                 }
                 {
-                    !isFetching && participants.length > 0 &&
+                    !isFetching && !isDrawing && participants.length > 0 &&
                     <Button variant={'ghost'} onClick={() => {
-                        const lucky = participants[Math.floor(Math.random() * participants.length)];
-                        toast({
-                            title: '中奖用户',
-                            description: ` 恭喜 ${lucky.name} (uid: ${lucky.uid}) 中奖！`,
-                            action: (
-                                <Button onClick={() => {
-                                    navigator.clipboard.writeText(`@${lucky.name}(${lucky.uid})`);
-                                    toast({
-                                        title: '复制成功',
-                                        description: ` 已将用户 ${lucky?.name} 的信息复制到剪贴板中 `,
-                                    })
-                                }
-                                }> 复制 </Button>
-                            )
-                        })
-                        // 从列表中移除
-                        setParticipants((prev) => {
-                            return prev.filter((item) => item.uid !== lucky.uid);
-                        });
+                        setIsDrawing(true);
                     }}> 开始抽奖 </Button>
+                }
+                {
+                    isDrawing &&
+                    <Button variant={'ghost'} onClick={() => {
+                        setIsDrawing(false);
+                    }}> 结束抽奖 </Button>
                 }
                 <Button variant={'ghost'} onClick={() => {
                     setMsgList([]);
