@@ -294,6 +294,12 @@ function App() {
                                             return prev.filter((item) => item.uid !== lucky.uid);
                                         });
                                     }
+                                    if (drawCount === null) {
+                                        toast({
+                                            title: '请选择抽取人数',
+                                            description: '请选择要抽取的人数',
+                                        });
+                                    }
                                 }}> 抽取 </Button>
                                 <Button variant={'ghost'} onClick={() => {
                                     setLuckyUserList([]);

@@ -4,7 +4,7 @@
   "author": "grtsinry43 <grtsinry43@outlook.com> (https://www.grtsinry43.com/)",
   "license": "MIT",
   "description": "一个B站直播抽奖工具，通过获取弹幕关键词进行抽奖，使用Electron + React + Vite构建",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "type": "module",
   "scripts": {
     "dev": "vite",
