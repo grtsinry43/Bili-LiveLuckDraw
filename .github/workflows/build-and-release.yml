@@ -55,6 +55,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: List build directory
+        run: ls -alh release/${{ github.ref_name }}
+
       - name: Upload Windows Release Asset
         uses: actions/upload-release-asset@v1
         env:
@@ -71,6 +74,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+
+      - name: List build directory
+        run: ls -alh release/${{ github.ref_name }}
 
       - name: Upload Linux Release Asset
         uses: actions/upload-release-asset@v1

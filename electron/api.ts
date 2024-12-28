@@ -138,7 +138,7 @@ function checkForKeywords(content: string, userName: string, uid: number) {
         return;
     }
 
-    if (content === keyword) {
+    if (content.includes(keyword)) {
         if (!participants.includes(uid)) {
             participants.push(uid);
             sendMsgToRenderer('add_user', {

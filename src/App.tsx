@@ -277,7 +277,14 @@ function App() {
                                         }
                                     </SelectContent>
                                 </Select>
-                                <Button className={"ml-4"} disabled={drawCount == 0} onClick={() => {
+                                <Button className={"ml-4"} disabled={drawCount === 0 || participants.length === 0} onClick={() => {
+                                    if (drawCount > participants.length) {
+                                        toast({
+                                            title: '抽取人数过多',
+                                            description: '抽取人数不能超过参与人数',
+                                        });
+                                        return;
+                                    }
                                     for (let i = 0; i < drawCount; i++) {
                                         const lucky = participants[Math.floor(Math.random() * participants.length)];
                                         setLuckyUserList((prev) => {
