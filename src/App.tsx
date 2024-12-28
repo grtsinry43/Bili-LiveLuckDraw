@@ -285,21 +285,25 @@ function App() {
                                         });
                                         return;
                                     }
-                                    for (let i = 0; i < drawCount; i++) {
-                                        const lucky = participants[Math.floor(Math.random() * participants.length)];
-                                        setLuckyUserList((prev) => {
-                                            return [...prev, lucky];
-                                        });
-                                        setParticipants((prev) => {
-                                            return prev.filter((item) => item.uid !== lucky.uid);
-                                        });
-                                    }
                                     if (drawCount === null) {
                                         toast({
                                             title: '请选择抽取人数',
                                             description: '请选择要抽取的人数',
                                         });
                                     }
+                                    const newLuckyUserList:Participant[] = [];
+                                    const newParticipants = [...participants];
+
+                                    for (let i = 0; i < drawCount; i++) {
+                                        const luckyIndex = Math.floor(Math.random() * newParticipants.length);
+                                        const lucky = newParticipants.splice(luckyIndex, 1)[0];
+                                        newLuckyUserList.push(lucky);
+                                    }
+
+                                    setLuckyUserList((prev) => [...prev, ...newLuckyUserList]);
+                                    setParticipants(newParticipants);
+                                    console.log("中奖用户列表", newLuckyUserList);
+                                    console.log("剩余参与者", newParticipants);
                                 }}> 抽取 </Button>
                                 <Button variant={'ghost'} onClick={() => {
                                     setLuckyUserList([]);
