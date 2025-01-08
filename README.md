@@ -2,9 +2,9 @@
 
 # Bili-LiveLuckDraw
 
-[![GitHub license](https://img.shields.io/github/license/grtsinry43/grtblog)](http://www.apache.org/licenses/LICENSE-2.0.html)
-[![GitHub release](https://img.shields.io/github/v/release/grtsinry43/grtblog)](https://github.com/grtsinry43/grtblog/releases)
-[![Last commit](https://img.shields.io/github/last-commit/grtsinry43/grtblog)](https://github.com/grtsinry43/grtblog/commits/main)
+[![GitHub license](https://img.shields.io/github/license/grtsinry43/Bili-LiveLuckDraw)](https://opensource.org/license/MIT)
+[![GitHub release](https://img.shields.io/github/v/release/grtsinry43/Bili-LiveLuckDraw)](https://github.com/grtsinry43/Bili-LiveLuckDraw/releases)
+[![Last commit](https://img.shields.io/github/last-commit/grtsinry43/Bili-LiveLuckDraw)](https://github.com/grtsinry43/Bili-LiveLuckDraw/commits/main)
 
 ---
 
