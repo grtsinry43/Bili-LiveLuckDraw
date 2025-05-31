@@ -6,8 +6,9 @@ import {getBuvid3, getCookies, getUid, sendMsgToRenderer} from "./main.ts";
 import fetchCookie from 'fetch-cookie';
 import Cookie = Electron.Cookie;
 import {ipcMain} from "electron";
+import {signRequest} from "./signTool.ts";
 
-const fetchWithCookies = fetchCookie(fetch);
+export const fetchWithCookies = fetchCookie(fetch);
 
 // 初始化弹幕提取器
 const danmuExtractor = new DanmuExtractor();
@@ -35,8 +36,15 @@ export async function getRoomId(shortId: string): Promise<number> {
 
 // 获取消息流服务器和密钥
 export async function getDanmuInfo(roomId: number): Promise<DanmuInfoResponse['data']> {
+    const params = {
+        id: roomId,
+        web_location: 444.8,
+        type: 0,
+    }
+    const args = await signRequest(params);
+    // console.log("签名请求参数", args.split("&").join("\n  "), "\n ")
     // 这里请求的时候需要带上全部的 cookie，否则拿到的 key 无法登录使用（！小坑）
-    const response = await fetchWithCookies(`https://api.live.bilibili.com/xlive/web-room/v1/index/getDanmuInfo?id=${roomId}`, {
+    const response = await fetchWithCookies(`https://api.live.bilibili.com/xlive/web-room/v1/index/getDanmuInfo?${args}`, {
         headers: {
             'Cookie': getCookies().map((cookie: Cookie) => `${cookie.name}=${cookie.value}`).join('; ')
         }
@@ -159,7 +167,6 @@ ipcMain.on('reset', () => {
     participants.length = 0;
     console.log('重置抽奖');
 });
-
 
 
 // 开启 WebSocket 连接并监听弹幕
